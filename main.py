@@ -22,15 +22,18 @@ def categoryToBinary(dataFrame , columnName):
 # loading data from CSV file 
 trainDf = pd.read_csv("train.csv")
 testDf = pd.read_csv("test.csv")
+
 # Merginf the two daasaet to do some data cleaning
 testDf["Survived"]=None
 trainDf["isTrainingSet"]=True
 testDf["isTrainingSet"]=False
 fullDf=pd.concat([trainDf,testDf] , ignore_index=False , axis=0 , sort=False)
+
 # Filling missing values in the data set
 fullDf["Embarked"]= fullDf["Embarked"].fillna('S')
 fullDf.Age = fullDf.Age.fillna(fullDf["Age"].median()) 
 fullDf.Fare = fullDf.Fare.fillna(fullDf["Fare"].median()) 
+
 # spliting the dataset again to start model fitting process
 trainDf =fullDf[fullDf.isTrainingSet==True] 
 testDf =fullDf[fullDf.isTrainingSet==False] 
@@ -81,7 +84,8 @@ titanicModel2.fit(features,target.astype('int'))
 result= testDf[["PassengerId","Survived"]]
 p=pd.DataFrame(titanicModel.predict(Test),columns=["Survived"])
 result["Survived"] = p["Survived"]
-result.to_csv(r'C:\Users\nader\Desktop\python\RandomForest.csv',index = None, header=True)
+#Writing results into new CSV file
+result.to_csv(r'./RandomForest1.csv',index = None, header=True)
 
 #predict using and (Decision tree) saving results                                      
 result= testDf[["PassengerId","Survived"]]
@@ -89,6 +93,6 @@ p=pd.DataFrame(titanicModel2.predict(Test),columns=["Survived"])
 result["Survived"] = p["Survived"].apply( lambda x: round(x))
 
 #Writing results into new CSV file
-result.to_csv(r'C:\Users\nader\Desktop\python\Decisiontree.csv',index = None, header=True)
+result.to_csv(r'./Decisiontree1.csv',index = None, header=True)
 
 print(result)
